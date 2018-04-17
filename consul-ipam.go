@@ -1,7 +1,7 @@
 package main
 
 import consulapi "github.com/hashicorp/consul/api"
-import "github.com/davecgh/go-spew/spew"
+// import "github.com/davecgh/go-spew/spew"
 import "fmt"
 import "net"
 import "os"
@@ -32,7 +32,7 @@ func populaterange(start string, end string) ( []string) {
   var ips []string
   for ip := s; ! ip.Equal(e); inc(ip) {
     ips = append(ips,ip.String())
-    fmt.Printf("%s\n", ip)
+    //fmt.Printf("%s\n", ip)
   }
   return ips
 }
