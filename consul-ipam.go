@@ -132,6 +132,15 @@ func nreg ( name string, ip string, c consulapi.Client ) {
 	}
 }
 
+func ndereg (name string, c consulapi.Client ) {
+	cat := c.Catalog()
+	dereg := new(consulapi.CatalogDeregistration)
+	dereg.Node = name
+	_, err := cat.Deregister(dereg, nil)
+	if err != nil {
+		panic(err)
+	}
+}
 /*
 // unused
 func sreg ( s_name string, s_ip string, n_name string, n_ip string, c consulapi.Client ) {
@@ -155,18 +164,23 @@ func sreg ( s_name string, s_ip string, n_name string, n_ip string, c consulapi.
 }
  */
 func main() {
-  if len(os.Args) != 4 {
-    fmt.Printf("Usage: %s consul-api-url location-of-iprange-in-kv\n", os.Args[0] )
+  if len(os.Args) != 5 {
+    fmt.Printf("Usage: %s consul-api-url location-of-iprange-in-kv <node-name> <reg/dereg>]\n", os.Args[0] )
     os.Exit(1)
   }
   url := os.Args[1]
   prefix := os.Args[2]
 	nodename := os.Args[3]
+	operation := os.Args[4]
   client := consulclient(url)
-  start, end := iprange(client, prefix)
-  initialips := populaterange(start, end)
-  usedips := used_consulips(client)
-  availableips := difference(initialips,usedips)
-	// Register node with an available ip in the range
-	nreg (nodename, availableips[0], client)
+	if operation == "dereg" {
+		ndereg(nodename, client)
+ 	} else if operation == "reg" {
+    start, end := iprange(client, prefix)
+    initialips := populaterange(start, end)
+    usedips := used_consulips(client)
+    availableips := difference(initialips,usedips)
+    	// Register node with an available ip in the range
+  	nreg (nodename, availableips[0], client)
+}
 }
