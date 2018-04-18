@@ -184,5 +184,7 @@ func main() {
     	// Register node with an available ip in the range
   	nreg (nodename, availableips[0], client)
 		fmt.Printf("%s",availableips[0])
+ } else {
+	 os.Exit(1)
  }
 }
