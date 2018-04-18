@@ -175,6 +175,7 @@ func main() {
   client := consulclient(url)
 	if operation == "dereg" {
 		ndereg(nodename, client)
+		fmt.Printf("%s","deregistered")
  	} else if operation == "reg" {
     start, end := iprange(client, prefix)
     initialips := populaterange(start, end)
@@ -182,5 +183,6 @@ func main() {
     availableips := difference(initialips,usedips)
     	// Register node with an available ip in the range
   	nreg (nodename, availableips[0], client)
-}
+		fmt.Printf("%s",availableips[0])
+ }
 }
